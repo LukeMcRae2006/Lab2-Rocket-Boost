@@ -7,34 +7,40 @@ public class MovementScript : MonoBehaviour
     [SerializeField] private InputAction thrust, rotation;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float rotStrength;
-    [SerializeField] private AudioSource thrustAudio;
+    [SerializeField] private AudioSource mainAudio, thrustAudio;
+    [SerializeField] private GameObject playerBody;
+    [SerializeField] private AudioClip destroyClip;
+    private bool canMove = true;
 
     public float thrustForce;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private void OnEnable()
     {
-        thrust.Enable(); 
+        thrust.Enable();
         rotation.Enable();
     }
 
     private void OnDisable()
     {
-        thrust.Disable(); 
+        thrust.Disable();
         rotation.Disable();
     }
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        ProcessThrust();
-        ProcessRotation();
+        if (canMove == true)
+        {
+            ProcessThrust();
+            ProcessRotation();
+        }
 
-        
+
     }
 
     private void ProcessThrust()
@@ -53,8 +59,8 @@ public class MovementScript : MonoBehaviour
 
     private void ProcessRotation()
     {
-       float rotationInput = rotation.ReadValue<float>();
-        if(rotationInput < 0)
+        float rotationInput = rotation.ReadValue<float>();
+        if (rotationInput < 0)
         {
             ApplyRotation(-rotStrength);
         }
@@ -67,5 +73,12 @@ public class MovementScript : MonoBehaviour
     private void ApplyRotation(float rotationStrength)
     {
         transform.Rotate(Vector3.forward * rotationStrength * Time.deltaTime);
+    }
+
+    public void DestroyPlayer()
+    {
+        canMove = false;
+        playerBody.SetActive(false);
+        mainAudio.PlayOneShot(destroyClip);
     }
 }
