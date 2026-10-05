@@ -10,6 +10,7 @@ public class MovementScript : MonoBehaviour
     [SerializeField] private AudioSource mainAudio, thrustAudio;
     [SerializeField] private GameObject playerBody;
     [SerializeField] private AudioClip destroyClip;
+    [SerializeField] private ParticleSystem fireParticle;
     private bool canMove = true;
 
     public float thrustForce;
@@ -49,11 +50,14 @@ public class MovementScript : MonoBehaviour
         {
 
             rb.AddRelativeForce(Vector3.up * thrustForce * Time.fixedDeltaTime);
+            fireParticle.Play();
             thrustAudio.enabled = true;
         }
         else
         {
             thrustAudio.enabled = false;
+            fireParticle.Stop();
+
         }
     }
 
